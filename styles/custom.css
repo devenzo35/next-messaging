@@ -1,0 +1,19 @@
+.msg__container::-webkit-scrollbar {
+  display: none;
+}
+
+.msg__container {
+  height: 80vh;
+}
+
+.input__msg {
+  height: 8vh;
+}
+
+.sidebar {
+  height: 11vh;
+}
+
+.emoji__container {
+  bottom: 8vh;
+}

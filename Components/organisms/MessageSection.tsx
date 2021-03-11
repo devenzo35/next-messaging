@@ -9,7 +9,7 @@ import { MsgContainer } from "../molecules/MsgContainer";
 export const MessageSection: FC = () => {
   const { activeRoom } = useSelector((state: RootState) => state.rooms);
   return (
-    <div className="h-auto w-full px-10 flex flex-col justify-center items-center">
+    <div className="h-auto w-full md:px-10 flex flex-col justify-center items-center">
       <Title className="hidden md:flex h-14 items-center justify-between px-4 w-full text-3xl bg-white shadow-lg">
         #{activeRoom.roomName}
         <i

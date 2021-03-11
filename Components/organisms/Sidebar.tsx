@@ -14,7 +14,7 @@ export const Sidebar: FC = () => {
   const handleRoom = () => setstate(!state);
   return (
     <aside
-      className={`sidebar w-full h-20 md:w-2/5 md:h-screen bg-indigo-800 text-white text-xs md:text-lg py-6 px-3 flex md:flex-col justify-between items-center duration-1000 ${
+      className={`sidebar w-full h-20 md:w-2/5 md:h-screen bg-indigo-600 text-white text-xs md:text-lg py-6 px-3 flex md:flex-col justify-between items-center duration-1000 ${
         state && "h-full absolute flex-col jusitfy-evenly md:static"
       }`}
     >

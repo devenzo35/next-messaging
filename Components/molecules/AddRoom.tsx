@@ -53,7 +53,7 @@ export const AddRoom: FC = () => {
           <AddBtn onClick={handleAdd} type="submit"></AddBtn>
         </form>
       ) : (
-        <AddBtn onClick={handleAdd} className="text-center rounded-t-xl">
+        <AddBtn onClick={handleAdd} className="text-center bg-indigo-700">
           {rooms && rooms.length < 10
             ? "Add lobby"
             : "exceeded the numbers of rooms"}

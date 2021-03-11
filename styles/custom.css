@@ -17,3 +17,7 @@
 .emoji__container {
   bottom: 8vh;
 }
+
+.room__info {
+  font-family: "Roboto Condensed", sans-serif;
+}

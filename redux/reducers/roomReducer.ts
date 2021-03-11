@@ -4,7 +4,8 @@ import {Action} from './rootReducer'
 const initialState = {
   rooms:null,
   activeRoom:{ id:"S1FjqbdyeozpXOG9ZYkt",
-  roomName:"general"}
+  roomName:"general",
+  roomDescription:"General room to talk and share ideas about whatever you want",}
 };
 
 export const roomReducer = (state = initialState, action:Action) => {

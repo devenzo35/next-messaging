@@ -30,14 +30,14 @@ export const RoomList: FC<RoomListProps> = ({ handleRoom, state }) => {
 
   return (
     <div
-      className={`block flex-col w-full text-xl text-center overflow-auto md:flex ${
+      className={`block  bg-indigo-400 rounded-xl inner-shadow flex-col w-5/6 text-xl text-center overflow-auto md:flex ${
         !state && "hidden"
       }`}
     >
-      <Title className="text-center border-b-4 border-black text-md">
+      <Title className="text-center border-b-4 border-black text-md bg-indigo-700">
         Rooms
       </Title>
-      <ul className="flex flex-row justify-evenly flex-wrap md:overflow-auto h-64 md:h-80 lg:overflow-hidden">
+      <ul className="flex flex-row justify-between items-center flex-wrap md:overflow-auto m-auto w-5/6 h-64 md:h-80 lg:overflow-hidden">
         {rooms ? (
           rooms.map(({ roomName, roomDescription, id }) => {
             return (

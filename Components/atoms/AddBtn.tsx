@@ -14,7 +14,7 @@ export const AddBtn: FC<AddBtnProps> = (props) => {
       type={type}
       className={
         !className
-          ? "text-center bg-indigo-300 rounded-r-md w-10 font-bold text-indigo-700"
+          ? "text-center bg-indigo-300 rounded-r-md w-full font-bold text-indigo-700"
           : className
       }
     >

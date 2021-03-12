@@ -41,14 +41,14 @@ export const AddRoom: FC = () => {
             onChange={handleOnChange}
             placeholder="Name"
             value={roomName}
-            className="bg-indigo-100 border-0 focus:outline-none rounded-l-md pl-1 pr-1 text-shadow text-indigo-700 font-bold w-32 text-md"
+            className="bg-indigo-100 border-0 focus:outline-none pl-1 pr-1 text-shadow text-indigo-700 font-bold w-3/6 text-md"
           ></Input>
           <Input
             name="roomDescription"
             placeholder="Description"
             onChange={handleOnChange}
             value={roomDescription}
-            className="bg-indigo-100 border-0 focus:outline-none rounded-r-md pl-1 pr-1 text-shadow text-indigo-700 font-bold w-32 text-md"
+            className="bg-indigo-100 border-0 focus:outline-none pl-1 pr-1 text-shadow text-indigo-700 font-bold w-3/6 text-md"
           ></Input>
           <AddBtn onClick={handleAdd} type="submit"></AddBtn>
         </form>

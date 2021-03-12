@@ -122,7 +122,7 @@ export const InputMessage: FC = () => {
       <Input
         onChange={handleOnChange}
         value={message}
-        className="w-4/6 p-1"
+        className="w-4/6 p-1 outline-none text-xl hover:bg-gray-200 duration-500"
         name="message"
         type="text"
         autoComplete="off"

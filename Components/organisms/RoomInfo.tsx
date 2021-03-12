@@ -10,13 +10,18 @@ export const RoomInfo: FC = () => {
   const { roomName, roomDescription } = activeRoom;
 
   return (
-    <div className="room__info bg-indigo-500 h-3/6 w-1/6 py-10 rounded-l-lg text-center p-2 shadow-md hidden md:flex flex-col justify-between border-2 border-indigo-700">
-      <Title className="text-xl font-bold shadow-md rounded-l-lg bg-white">
-        {" "}
-        Room name: {roomName}
-      </Title>
-      <section className="shadow-md bg-white rounded-l-lg">
-        <Title className="text-xl font-bold"> Description:</Title>
+    <div className="room__info h-3/6 w-1/5 text-center shadow-md hidden md:flex flex-col justify-center items-center self-start bg-white border-2 px-1 border-indigo-700">
+      <section>
+        <Title className="text-xl bg-indigo-600 w-full px-2 rounded-lg m-auto text-white">
+          ROOM NAME:
+        </Title>
+        <P className="text-3xl mt-2">{roomName}</P>
+      </section>
+      <section className="w-full border-2 h-max mt-6">
+        <Title className="text-xl bg-indigo-600 w-5/6 rounded-lg m-auto text-white">
+          {" "}
+          DESCRIPTION:
+        </Title>
         <P className="text-lg">{roomDescription}</P>
       </section>
     </div>

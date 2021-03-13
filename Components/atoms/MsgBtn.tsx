@@ -11,7 +11,7 @@ export const MsgBtn: FC<MsgBtn> = (props): JSX.Element => {
     <button
       type={props.type}
       {...props}
-      className={`w-1/6 duration-500 hover:bg-gray-200 ${props.className}`}
+      className={`w-1/6 duration-500 border-2 hover:border-gray-200 border-white hover:shadow-md focus:outline-none focus:* ${props.className}`}
     >
       {props.children}
     </button>

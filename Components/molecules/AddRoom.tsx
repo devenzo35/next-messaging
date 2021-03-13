@@ -12,24 +12,26 @@ interface RoomName {
 }
 
 export const AddRoom: FC = () => {
-  const dispatch = useDispatch();
   const { formValue, handleOnChange, reset } = useForm<RoomName>({
     roomName: "",
     roomDescription: "",
   });
   const [putName, setPutName] = useState(false);
-
   const { rooms } = useSelector((state: RootState) => state.rooms);
+  const dispatch = useDispatch();
 
   const { roomName, roomDescription } = formValue;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (roomName.length < 5 || roomDescription.length < 10) return;
     dispatch({ type: "START_ADD_ROOM", payload: formValue });
   };
 
   const handleAdd = () => {
-    setPutName(true);
+    setTimeout(() => {
+      setPutName(!putName);
+    }, 1);
   };
 
   return (

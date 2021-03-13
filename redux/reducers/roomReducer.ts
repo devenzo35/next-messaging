@@ -3,9 +3,10 @@ import {Action} from './rootReducer'
 
 const initialState = {
   rooms:null,
-  activeRoom:{ id:"S1FjqbdyeozpXOG9ZYkt",
-  roomName:"General",
-  roomDescription:"General room to talk and share ideas about whatever you want",}
+  activeRoom:{ 
+    id:"tzhO1m5udIrhmhRx9TwA",
+    roomName:"General",
+    roomDescription:"General room to talk and share ideas about whatever you want",}
 };
 
 export const roomReducer = (state = initialState, action:Action) => {

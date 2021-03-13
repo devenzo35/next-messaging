@@ -22,7 +22,7 @@ export const RoomInfo: FC = () => {
           {" "}
           DESCRIPTION:
         </Title>
-        <P className="text-lg">{roomDescription}</P>
+        <P className="text-lg mt-3">{roomDescription}</P>
       </section>
     </div>
   );

@@ -25,7 +25,6 @@ const fetchMessages = (room, callback) => {
   return db
     .collection(`/rooms/${room}/messages`)
     .orderBy("createdAt", "asc")
-    .limit(30)
     .onSnapshot(({ docs }) => {
       const messages = [];
       docs.map((doc) => {

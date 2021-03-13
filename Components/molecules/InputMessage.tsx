@@ -19,6 +19,16 @@ interface Message {
   message: string;
 }
 
+interface Payload {
+  roomId: string;
+  uid: string;
+  username: string;
+  avatar: string;
+  message: string;
+  createdAt: firebase.firestore.Timestamp;
+  image?: string;
+}
+
 export const InputMessage: FC = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
@@ -43,16 +53,6 @@ export const InputMessage: FC = () => {
     }
   }, [task]);
 
-  interface Payload {
-    roomId: string;
-    uid: string;
-    username: string;
-    avatar: string;
-    message: string;
-    createdAt: firebase.firestore.Timestamp;
-    image?: string;
-  }
-
   const payload: Payload = {
     roomId: id,
     uid,
@@ -65,6 +65,7 @@ export const InputMessage: FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (message.trim().length < 1) return;
     dispatch<Payload>({
       type: types.START_ADD_MSG,
       payload,
@@ -99,7 +100,7 @@ export const InputMessage: FC = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="input__msg shadow-md bg-white flex flex-row w-full md:mt-2"
+      className="input__msg shadow-lg bg-white flex flex-row w-full md:mt-1"
     >
       <MsgBtn type="button" onClick={StartUploadFile}>
         <i className="fas fa-paperclip"></i>
@@ -122,10 +123,11 @@ export const InputMessage: FC = () => {
       <Input
         onChange={handleOnChange}
         value={message}
-        className="w-4/6 p-1 outline-none text-xl hover:bg-gray-200 duration-500"
+        className="w-4/6 p-1 outline-none text-xl border hover:border-gray-200 rounded-xl border-white duration-500"
         name="message"
         type="text"
         autoComplete="off"
+        onClick={() => setShowEmojiPicker(false)}
       />
       <MsgBtn
         type={"submit"}

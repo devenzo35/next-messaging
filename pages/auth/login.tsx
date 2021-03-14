@@ -1,12 +1,31 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { firebase, provider } from "../../firebase/firebaseConfig";
 import { RootState } from "../../redux/reducers/rootReducer";
 
+interface formValues {
+  name: string;
+  email: string;
+  password: string;
+  password2: string;
+}
+
 function login() {
+  const { register, handleSubmit, watch, errors } = useForm<FormData>();
   const { user } = useSelector((state: RootState) => state.auth);
+
+  const { email, password }: formValues = errors;
+  const passwordValue = watch("password");
+  console.log(passwordValue);
+  console.log(errors);
+  const onSubmit = (data: Object) => {
+    console.log(data);
+    console.log(errors);
+  };
+
   const handleGoogle = () => {
     try {
       firebase.auth().signInWithPopup(provider);
@@ -33,36 +52,62 @@ function login() {
             Welcome to Next Chat
           </h2>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="mt-8 space-y-6"
+          action="#"
+          method="POST"
+        >
           <input type="hidden" name="remember" value="true"></input>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email-address" className="sr-only">
                 Email address
               </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-              ></input>
+              <section className="flex flex-row relative">
+                <input
+                  id="email-address"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  ref={register({
+                    required: true,
+                    pattern: /[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})/i,
+                  })}
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Email address"
+                ></input>
+                {email && (
+                  <i
+                    title="Enter a valid email"
+                    className="fas fa-exclamation-circle absolute -right-6 inset-y-1/4 hover:text-red-500"
+                  ></i>
+                )}
+              </section>
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-              ></input>
+              <section className="flex flex-row relative">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  ref={register({
+                    required: true,
+                    pattern: /[A-Za-z0-9_]{8,50}/,
+                  })}
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Password"
+                ></input>
+                {password && (
+                  <i
+                    title="Password must have at least 8 characters and can't have symbols"
+                    className="fas fa-exclamation-circle absolute -right-6 inset-y-1/4 hover:text-red-500"
+                  ></i>
+                )}
+              </section>
             </div>
           </div>
 

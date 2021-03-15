@@ -12,7 +12,7 @@ const dispatch = useDispatch();
           avatar: user?.photoURL,
           uid: user?.uid,
         };
-
+        console.log(user)
         localStorage.setItem("user", JSON.stringify(userInfo));
         dispatch({ type: "START_LOGIN", payload: userInfo });
 

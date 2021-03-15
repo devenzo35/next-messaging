@@ -41,7 +41,12 @@ export const Sidebar: FC = () => {
       </section>
       <Avatar />
       <RoomList handleRoom={handleRoom} state={state} />
-      <AddBtn onClick={handleLogout} className="bg-red-400 rounded-lg w-3/6">
+      <AddBtn
+        onClick={handleLogout}
+        className={`bg-red-400 rounded-lg h-10 w-1/6 md:h-10 md:w-3/6 md:block ${
+          !state && "hidden"
+        }`}
+      >
         Log out
       </AddBtn>
     </aside>

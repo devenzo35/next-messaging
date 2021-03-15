@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { firebase, provider } from "../../firebase/firebaseConfig";
 import { RootState } from "../../redux/reducers/rootReducer";
 
@@ -14,17 +14,12 @@ interface formValues {
 }
 
 function login() {
-  const { register, handleSubmit, watch, errors } = useForm<FormData>();
+  const { register, handleSubmit, watch, errors, reset } = useForm<FormData>();
   const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
 
   const { email, password }: formValues = errors;
   const passwordValue = watch("password");
-  console.log(passwordValue);
-  console.log(errors);
-  const onSubmit = (data: Object) => {
-    console.log(data);
-    console.log(errors);
-  };
 
   const handleGoogle = () => {
     try {
@@ -32,6 +27,25 @@ function login() {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const onSubmit = (data: Object) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(data.email, data.password)
+      .then(async ({ user }) => {
+        const userInfo = {
+          username: user?.displayName,
+          avatar: user?.photoURL,
+          uid: user?.uid,
+        };
+
+        dispatch({ type: "START_LOGIN", payload: userInfo });
+        reset();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const Router = useRouter();

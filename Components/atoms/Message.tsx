@@ -47,7 +47,7 @@ export const Message: React.FC<MessageProps> = (props) => {
           ></img>
         </div>
       )}
-      {uid !== userId && (
+      {uid !== userId && src && (
         <img className="w-8 h-8 rounded-3xl" src={src} alt="message"></img>
       )}
       <div

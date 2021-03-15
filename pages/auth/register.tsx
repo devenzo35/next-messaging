@@ -1,5 +1,10 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { firebase } from "../../firebase/firebaseConfig";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { RootState } from "../../redux/reducers/rootReducer";
 
 interface formValues {
   name: string;
@@ -9,15 +14,40 @@ interface formValues {
 }
 
 export default function register() {
-  const { register, handleSubmit, watch, errors } = useForm<FormData>();
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { register, handleSubmit, watch, errors, reset } = useForm<FormData>();
   const { name, email, password, password2 }: formValues = errors;
+
   const passwordValue = watch("password");
-  console.log(passwordValue);
-  console.log(errors);
+
   const onSubmit = (data: Object) => {
-    console.log(data);
-    console.log(errors);
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(data.email, data.password)
+      .then(async ({ user }) => {
+        await user.updateProfile({ displayName: data.name, photoURL: null });
+
+        const userInfo = {
+          username: user?.displayName,
+          avatar: user?.photoURL,
+          uid: user?.uid,
+        };
+
+        dispatch({ type: "START_LOGIN", payload: userInfo });
+        reset();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+  const Router = useRouter();
+  useEffect(() => {
+    user && Router.replace("/");
+  }, [user]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-indigo-700">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg">

@@ -2,7 +2,7 @@ import { types } from "../types";
 import {Action} from './rootReducer'
 
 const initialState = {
-  user: null,
+  user: undefined,
 };
 
 export const authReducer = (state = initialState, action:Action) => {
@@ -11,6 +11,12 @@ export const authReducer = (state = initialState, action:Action) => {
       return {
         ...state,
         user: { ...action.payload },
+      };
+    
+      case types.WITHOUT_USER:
+      return {
+        ...state,
+        user: null,
       };
       
       case types.LOGIN_FAILED:

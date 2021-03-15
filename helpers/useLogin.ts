@@ -20,7 +20,7 @@ const dispatch = useDispatch();
         console.log(err.code, err.message, err.email, err.credential);
       }
     } else {
-      return null;
+      dispatch({ type: "WITHOUT_USER"});
     }
   });
 }

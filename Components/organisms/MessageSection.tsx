@@ -10,12 +10,8 @@ export const MessageSection: FC = () => {
   const { activeRoom } = useSelector((state: RootState) => state.rooms);
   return (
     <div className="h-auto w-full md:px-10 flex flex-col justify-center items-center">
-      <Title className="hidden md:flex h-14 items-center justify-between px-4 w-full text-3xl bg-white shadow-lg">
+      <Title className="hidden md:flex h-14 items-center justify-start px-4 w-full text-3xl bg-white shadow-lg">
         #{activeRoom.roomName}
-        <i
-          title="Add room to favorites"
-          className="fas fa-star text-indigo-600 hover:text-yellow-400 cursor-pointer"
-        ></i>
       </Title>
 
       <MsgContainer />

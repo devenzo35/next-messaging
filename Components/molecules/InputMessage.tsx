@@ -8,6 +8,7 @@ import { useForm } from "../../hooks/useForm";
 import { Picker } from "emoji-mart";
 import { RootState } from "../../redux/reducers/rootReducer";
 import { useUploadFile } from "../../hooks/useUploadFile";
+import { v4 as uuidv4 } from "uuid";
 
 interface User {
   username: string;
@@ -32,29 +33,37 @@ export const InputMessage: FC = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
   const { activeRoom } = useSelector((state: RootState) => state.rooms);
-  const { formValue, handleOnChange, reset } = useForm<Message>({
-    message: "",
-  });
   const [task, setTask] = useState(null);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const { id } = activeRoom || "";
+  const [progress, setProgress] = useState<string>(null);
+  const { formValue, handleOnChange, reset } = useForm<Message>({
+    message: "",
+  });
+
   const { username, avatar, uid }: User = user;
   const { message } = formValue;
-  const [progress, setProgress] = useState<string>(null);
 
   useEffect(() => {
     if (task) {
-      console.log(task);
-      task.on("state_changed", (snapshot) => {
-        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(progress + "%");
-
-        task.snapshot.ref.getDownloadURL().then((url) => {
-          setProgress("Image uploaded");
-          setImageUrl(url);
-        });
-      });
+      task.on(
+        "state_changed",
+        (snapshot) => {
+          var progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(progress + "%");
+        },
+        (err) => {
+          setProgress("Image couldn't be uploaded");
+        },
+        () => {
+          task.snapshot.ref.getDownloadURL().then((url: string) => {
+            setProgress("Image uploaded");
+            setImageUrl(url);
+          });
+        }
+      );
     }
   }, [task]);
 

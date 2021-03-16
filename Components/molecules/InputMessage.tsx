@@ -8,7 +8,6 @@ import { useForm } from "../../hooks/useForm";
 import { Picker } from "emoji-mart";
 import { RootState } from "../../redux/reducers/rootReducer";
 import { useUploadFile } from "../../hooks/useUploadFile";
-import { FileHandle } from "fs/promises";
 
 interface User {
   username: string;
@@ -42,11 +41,17 @@ export const InputMessage: FC = () => {
   const { id } = activeRoom || "";
   const { username, avatar, uid }: User = user;
   const { message } = formValue;
+  const [progress, setProgress] = useState<string>(null);
 
   useEffect(() => {
     if (task) {
+      console.log(task);
       task.on("state_changed", (snapshot) => {
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress(progress + "%");
+
         task.snapshot.ref.getDownloadURL().then((url) => {
+          setProgress("Image uploaded");
           setImageUrl(url);
         });
       });
@@ -70,12 +75,16 @@ export const InputMessage: FC = () => {
       type: types.START_ADD_MSG,
       payload,
     });
+    setProgress(null);
+    setImageUrl(null);
     reset();
   };
 
   const StartUploadFile = () => {
     const element: HTMLElement | null = document.querySelector(".file");
     element!.click();
+    setProgress(null);
+    setImageUrl(null);
   };
 
   const handleSelect = (emoji) => {
@@ -87,7 +96,7 @@ export const InputMessage: FC = () => {
     });
   };
 
-  const handleFile = (e: Event) => {
+  const handleFile = async (e: Event) => {
     const file = (e.target as HTMLInputElement).files[0];
     const task = useUploadFile(file);
     setTask(task);
@@ -102,8 +111,13 @@ export const InputMessage: FC = () => {
       onSubmit={handleSubmit}
       className="input__msg shadow-lg bg-white flex flex-row w-full md:mt-1"
     >
-      <MsgBtn type="button" onClick={StartUploadFile}>
+      <MsgBtn
+        type="button"
+        className="flex flex-col p-2 items-center justify-center"
+        onClick={StartUploadFile}
+      >
         <i className="fas fa-paperclip"></i>
+        {progress && <span className="text-xs">{progress}</span>}
       </MsgBtn>
 
       <Input className="hidden file" onChange={handleFile} type="file"></Input>
@@ -129,6 +143,9 @@ export const InputMessage: FC = () => {
         autoComplete="off"
         onClick={() => setShowEmojiPicker(false)}
       />
+      {imageUrl && (
+        <img src={imageUrl} className="rounded-lg p-1" alt="image preview" />
+      )}
       <MsgBtn
         type={"submit"}
         className={"font-bold w-1/6"}

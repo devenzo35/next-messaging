@@ -3,6 +3,7 @@ import {Action} from './rootReducer'
 
 const initialState = {
   user: undefined,
+  authError: undefined,
 };
 
 export const authReducer = (state = initialState, action:Action) => {
@@ -11,6 +12,7 @@ export const authReducer = (state = initialState, action:Action) => {
       return {
         ...state,
         user: { ...action.payload },
+        authError: null
       };
     
       case types.WITHOUT_USER:
@@ -20,9 +22,16 @@ export const authReducer = (state = initialState, action:Action) => {
       };
       
       case types.LOGIN_FAILED:
+        console.log('object')
         return {
           ...state,
-          user: action.payload,
+          authError: action.payload,
+        };
+      
+        case types.CLEAN_ERRORS:
+        return {
+          ...state,
+          authError: null,
         };
         
         case types.LOGOUT_USER:

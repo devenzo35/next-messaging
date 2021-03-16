@@ -1,5 +1,6 @@
 import { firebase } from "../firebase/firebaseConfig";
 import { useDispatch } from "react-redux";
+import { types } from "../redux/types";
 
 const useLogin=()=>{
 
@@ -12,9 +13,7 @@ const dispatch = useDispatch();
           avatar: user?.photoURL,
           uid: user?.uid,
         };
-        console.log(user)
-        localStorage.setItem("user", JSON.stringify(userInfo));
-        dispatch({ type: "START_LOGIN", payload: userInfo });
+        dispatch({ type: types.UPDATE_USER_STATE, payload: userInfo });
 
       } catch (err) {
         console.log(err.code, err.message, err.email, err.credential);

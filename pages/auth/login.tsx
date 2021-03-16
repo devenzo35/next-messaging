@@ -5,8 +5,9 @@ import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { firebase, provider } from "../../firebase/firebaseConfig";
 import { RootState } from "../../redux/reducers/rootReducer";
+import { types } from "../../redux/types";
 
-interface formValues {
+interface formData {
   name: string;
   email: string;
   password: string;
@@ -14,39 +15,26 @@ interface formValues {
 }
 
 function login() {
-  const { register, handleSubmit, watch, errors, reset } = useForm<FormData>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { register, handleSubmit, watch, errors, reset } = useForm<formData>();
+  const { user, authError } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
-
-  const { email, password }: formValues = errors;
-  const passwordValue = watch("password");
 
   const handleGoogle = () => {
     try {
       firebase.auth().signInWithPopup(provider);
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      dispatch({ type: types.LOGIN_FAILED, payload: err.message });
     }
   };
 
-  const onSubmit = (data: Object) => {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(data.email, data.password)
-      .then(async ({ user }) => {
-        const userInfo = {
-          username: user?.displayName,
-          avatar: user?.photoURL,
-          uid: user?.uid,
-        };
-
-        dispatch({ type: "START_LOGIN", payload: userInfo });
-        reset();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const onSubmit = ({ email, password, reset }) => {
+    dispatch({
+      type: types.START_LOGIN,
+      payload: { email, password, reset },
+    });
   };
+
+  const cleanAuthError = () => dispatch({ type: types.CLEAN_ERRORS });
 
   const Router = useRouter();
   useEffect(() => {
@@ -91,7 +79,7 @@ function login() {
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Email address"
                 ></input>
-                {email && (
+                {errors.email && (
                   <i
                     title="Enter a valid email"
                     className="fas fa-exclamation-circle absolute -right-6 inset-y-1/4 hover:text-red-500"
@@ -115,7 +103,7 @@ function login() {
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Password"
                 ></input>
-                {password && (
+                {errors.password && (
                   <i
                     title="Password must have at least 8 characters and can't have symbols"
                     className="fas fa-exclamation-circle absolute -right-6 inset-y-1/4 hover:text-red-500"
@@ -125,6 +113,15 @@ function login() {
             </div>
           </div>
 
+          {authError && (
+            <p className="m-auto mt-0 text-sm text-center w-full h-max">
+              {authError}
+              <i
+                title="Passwords must be the same"
+                className="fas fa-exclamation-circle text-lg text-red-700"
+              ></i>
+            </p>
+          )}
           <div className="flex items-center justify-between">
             <button
               onClick={handleGoogle}
@@ -153,13 +150,8 @@ function login() {
               <b style={{ position: "relative" }}>Google</b>
             </button>
 
-            <div className="text-sm">
-              <Link
-                href="/auth/register"
-                /* className="font-medium text-indigo-600 hover:text-indigo-500" */
-              >
-                Don't have an account yet?
-              </Link>
+            <div className="text-sm" onClick={cleanAuthError}>
+              <Link href="/auth/register">Don't have an account yet?</Link>
             </div>
           </div>
 

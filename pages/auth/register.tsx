@@ -1,12 +1,15 @@
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { firebase } from "../../firebase/firebaseConfig";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { RootState } from "../../redux/reducers/rootReducer";
 
-interface formValues {
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+
+import { firebase, provider } from "../../firebase/firebaseConfig";
+import { RootState } from "../../redux/reducers/rootReducer";
+import { types } from "../../redux/types";
+
+interface formData {
   name: string;
   email: string;
   password: string;
@@ -14,34 +17,28 @@ interface formValues {
 }
 
 export default function register() {
+  const { user, authError } = useSelector((state: RootState) => state.auth);
+  const { register, handleSubmit, watch, errors, reset } = useForm<formData>();
   const dispatch = useDispatch();
-
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { register, handleSubmit, watch, errors, reset } = useForm<FormData>();
-  const { name, email, password, password2 }: formValues = errors;
 
   const passwordValue = watch("password");
 
-  const onSubmit = (data: Object) => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(data.email, data.password)
-      .then(async ({ user }) => {
-        await user.updateProfile({ displayName: data.name, photoURL: null });
-
-        const userInfo = {
-          username: user?.displayName,
-          avatar: user?.photoURL,
-          uid: user?.uid,
-        };
-
-        dispatch({ type: "START_LOGIN", payload: userInfo });
-        reset();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleGoogle = () => {
+    try {
+      firebase.auth().signInWithPopup(provider);
+    } catch (err) {
+      dispatch({ type: types.LOGIN_FAILED, payload: err.message });
+    }
   };
+
+  const onSubmit = ({ name, email, password }) => {
+    dispatch({
+      type: types.START_REGISTER,
+      payload: { name, email, password, reset },
+    });
+  };
+
+  const cleanAuthError = () => dispatch({ type: types.CLEAN_ERRORS });
 
   const Router = useRouter();
   useEffect(() => {
@@ -49,8 +46,8 @@ export default function register() {
   }, [user]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-indigo-700">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-7 px-4 sm:px-6 lg:px-4 bg-indigo-700">
+      <div className="max-w-md w-full space-y-8 p-6 bg-white rounded-lg">
         <div>
           <img
             className="mx-auto h-36 w-auto"
@@ -63,7 +60,7 @@ export default function register() {
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-8 space-y-6"
+          className="mt-3 space-y-6"
           action="#"
           method="POST"
         >
@@ -84,7 +81,7 @@ export default function register() {
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="name"
                 ></input>
-                {name && (
+                {errors.name && (
                   <i
                     title="Name must have at least 3 characters"
                     className="fas fa-exclamation-circle absolute -right-6 inset-y-1/4 hover:text-red-500"
@@ -106,11 +103,11 @@ export default function register() {
                   })}
                   type="email"
                   autoComplete="email"
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Email address"
                 ></input>
 
-                {email && (
+                {errors.email && (
                   <i
                     title="Enter a valid email"
                     className="fas fa-exclamation-circle absolute -right-6 inset-y-1/4 hover:text-red-500"
@@ -133,10 +130,10 @@ export default function register() {
                   })}
                   type="password"
                   autoComplete="current-password"
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Password"
                 ></input>
-                {password && (
+                {errors.password && (
                   <i
                     title="Password must have at least 8 characters and can't have symbols"
                     className="fas fa-exclamation-circle absolute -right-6 inset-y-1/4 hover:text-red-500"
@@ -163,7 +160,7 @@ export default function register() {
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Confirm your password"
                 ></input>
-                {password2 && (
+                {errors.password2 && (
                   <i
                     title="Passwords must be the same"
                     className="fas fa-exclamation-circle absolute -right-6 inset-y-1/4 hover:text-red-500"
@@ -172,9 +169,19 @@ export default function register() {
               </section>
             </div>
           </div>
+          {authError && (
+            <p className="m-auto mt-0 text-sm text-center w-full h-max">
+              {authError}
+              <i
+                title="Passwords must be the same"
+                className="fas fa-exclamation-circle text-lg text-red-700"
+              ></i>
+            </p>
+          )}
 
           <div className="flex items-center justify-between">
             <button
+              onClick={handleGoogle}
               type="button"
               style={{
                 background: "#4285f4",
@@ -199,10 +206,8 @@ export default function register() {
               ></img>
               <b style={{ position: "relative" }}>Google</b>
             </button>
-            <div className="text-sm">
-              <Link href="/auth/login" className="hover:text-indigo-700">
-                Do you already have an account?
-              </Link>
+            <div className="text-sm" onClick={cleanAuthError}>
+              <Link href="/auth/login">Do you already have an account?</Link>
             </div>
           </div>
 

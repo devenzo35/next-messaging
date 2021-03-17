@@ -50,12 +50,12 @@ export const InputMessage: FC = () => {
       task.on(
         "state_changed",
         (snapshot) => {
-          var progress =
+          var progressPorcentage =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setProgress(progress + "%");
+          setProgress(progressPorcentage.toFixed(1) + "%");
         },
         (err) => {
-          setProgress("Image couldn't be uploaded");
+          setProgress("Image couldn't be uploaded" + err.message);
         },
         () => {
           task.snapshot.ref.getDownloadURL().then((url: string) => {
@@ -91,7 +91,7 @@ export const InputMessage: FC = () => {
 
   const StartUploadFile = () => {
     const element: HTMLElement | null = document.querySelector(".file");
-    element!.click();
+    element.click();
     setProgress(null);
     setImageUrl(null);
   };
@@ -107,8 +107,8 @@ export const InputMessage: FC = () => {
 
   const handleFile = async (e: Event) => {
     const file = (e.target as HTMLInputElement).files[0];
-    const task = useUploadFile(file);
-    setTask(task);
+    const uploadTask = useUploadFile(file);
+    setTask(uploadTask);
   };
 
   const handleEmojiTable = () => {

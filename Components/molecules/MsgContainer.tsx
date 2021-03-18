@@ -4,23 +4,24 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchMessages } from "../../firebase/firebaseConfig";
 
 import { types } from "../../redux/types";
-import { Message } from "../atoms/Message";
+import { Message } from "./Message";
 import { RootState } from "../../redux/reducers/rootReducer";
-import { MessagePlaceholder } from "../atoms/MessagePlaceholder";
+import { MsgContainerPlaceholder } from "./MsgContainerPlaceholder";
+import { P } from "../atoms/P";
+
+interface RoomId {
+  id: string;
+}
 
 export const MsgContainer: FC = () => {
+  const dispatch = useDispatch();
+  const msgContainer = useRef(null);
   const { messages } = useSelector<RootState, Object[]>(
     (state: RootState) => state.msgs
   );
   const { activeRoom } = useSelector<RootState, Object[]>(
     (state: RootState) => state.rooms
   );
-  const dispatch = useDispatch();
-  const msgContainer = useRef(null);
-
-  interface RoomId {
-    id: string;
-  }
 
   const { id: roomId }: RoomId = activeRoom;
 
@@ -53,12 +54,12 @@ export const MsgContainer: FC = () => {
           }
         )
       ) : (
-        <MessagePlaceholder />
+        <MsgContainerPlaceholder />
       )}
       {messages && messages.length === 0 && (
-        <p className="text-xl font-bold w-full h-full grid place-items-center">
+        <P className="text-xl font-bold w-full h-full grid place-items-center">
           Chat is empty, write a message!
-        </p>
+        </P>
       )}
       <div style={{ float: "left", clear: "both" }} ref={msgContainer}></div>
     </div>

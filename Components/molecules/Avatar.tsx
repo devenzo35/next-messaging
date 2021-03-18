@@ -1,14 +1,16 @@
 import React, { FC } from "react";
-import { ProfilePicture } from "../atoms/ProfilePicture";
 import { useSelector } from "react-redux";
-import { P } from "../atoms/P";
+
+import { RootState } from "../../redux/reducers/rootReducer";
+import { ProfilePicture } from "../atoms/ProfilePicture";
+import { Span } from "../atoms/Span";
 
 export const Avatar: FC = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state: RootState) => state.auth);
   return (
     <div className="flex flex-col order-4 md:order-none">
       {user.avatar && <ProfilePicture src={user.avatar} />}
-      <P className="hidden md:block text-center">{user.username}</P>
+      <Span className="hidden md:block text-center">{user.username}</Span>
     </div>
   );
 };

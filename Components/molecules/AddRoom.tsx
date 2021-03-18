@@ -4,7 +4,9 @@ import { RootState } from "../../redux/reducers/rootReducer";
 
 import { Input } from "../atoms/Input";
 import { useForm } from "../../hooks/useForm";
-import { AddBtn } from "../atoms/AddBtn";
+import { Btn } from "../atoms/Btn";
+import { types } from "../../redux/types";
+import { Form } from "../atoms/Form";
 
 interface RoomName {
   roomName: string;
@@ -12,20 +14,21 @@ interface RoomName {
 }
 
 export const AddRoom: FC = () => {
+  const [putName, setPutName] = useState<boolean>(false);
+  const { rooms } = useSelector((state: RootState) => state.rooms);
+  const dispatch = useDispatch();
   const { formValue, handleOnChange, reset } = useForm<RoomName>({
     roomName: "",
     roomDescription: "",
   });
-  const [putName, setPutName] = useState(false);
-  const { rooms } = useSelector((state: RootState) => state.rooms);
-  const dispatch = useDispatch();
 
   const { roomName, roomDescription } = formValue;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (roomName.length < 5 || roomDescription.length < 10) return;
-    dispatch({ type: "START_ADD_ROOM", payload: formValue });
+    if (roomName.length < 1 || roomDescription.length < 3) return;
+    dispatch({ type: types.START_ADD_ROOM, payload: formValue });
+    reset();
   };
 
   const handleAdd = () => {
@@ -37,7 +40,7 @@ export const AddRoom: FC = () => {
   return (
     <>
       {putName && rooms.length < 10 ? (
-        <form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
           <Input
             name="roomName"
             onChange={handleOnChange}
@@ -52,14 +55,14 @@ export const AddRoom: FC = () => {
             value={roomDescription}
             className="bg-indigo-100 border-0 focus:outline-none pl-1 pr-1 text-shadow text-indigo-700 font-bold w-3/6 text-md"
           ></Input>
-          <AddBtn onClick={handleAdd} type="submit"></AddBtn>
-        </form>
+          <Btn onClick={handleAdd} type="submit"></Btn>
+        </Form>
       ) : (
-        <AddBtn onClick={handleAdd} className="text-center bg-indigo-700">
+        <Btn onClick={handleAdd} className="text-center bg-indigo-700">
           {rooms && rooms.length < 10
             ? "Add lobby"
             : "exceeded the numbers of rooms"}
-        </AddBtn>
+        </Btn>
       )}
     </>
   );

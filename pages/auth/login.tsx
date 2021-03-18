@@ -15,7 +15,7 @@ interface formData {
 }
 
 function login() {
-  const { register, handleSubmit, watch, errors, reset } = useForm<formData>();
+  const { register, handleSubmit, errors } = useForm<formData>();
   const { user, authError } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 

@@ -8,7 +8,7 @@ interface TitleProps {
 export const Title: FC<TitleProps> = (props) => {
   return (
     <h2
-      className={`w-2/6 h-18 text-center grid place-items-center text-2xl font-bold ${props.className}`}
+      className={`w-2/6 h-18 text-center grid place-items-center text-2xl font-bold`}
       {...props}
     >
       {props.children}

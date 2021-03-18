@@ -1,12 +1,16 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+
+import "emoji-mart/css/emoji-mart.css";
+
 import { fetchRooms } from "../../firebase/firebaseConfig";
-import { MessagePlaceholder } from "../atoms/MessagePlaceholder";
+import { MsgContainerPlaceholder } from "./MsgContainerPlaceholder";
+import { RootState } from "../../redux/reducers/rootReducer";
+import { types } from "../../redux/types";
 import { Rooms } from "../atoms/Rooms";
 import { Title } from "../atoms/Title";
-import "emoji-mart/css/emoji-mart.css";
-import { RootState } from "../../redux/reducers/rootReducer";
 import { AddRoom } from "./AddRoom";
+import { List } from "../atoms/List";
 
 interface RoomListProps {
   handleRoom: () => void;
@@ -19,14 +23,16 @@ export const RoomList: FC<RoomListProps> = ({ handleRoom, state }) => {
 
   useEffect(() => {
     fetchRooms((room: Object[]) => {
-      dispatch({ type: "START_LOAD_ROOMS", payload: room });
+      dispatch({ type: types.START_LOAD_ROOMS, payload: room });
     });
   }, []);
 
   const setActiveRoom = (formValue: Object) => {
-    dispatch({ type: "ACTIVE_ROOM", payload: formValue });
+    dispatch({ type: types.ACTIVE_ROOM, payload: formValue });
     handleRoom();
   };
+
+  console.log(rooms);
 
   return (
     <div
@@ -37,7 +43,7 @@ export const RoomList: FC<RoomListProps> = ({ handleRoom, state }) => {
       <Title className="text-center border-b-4 border-black text-md bg-indigo-700">
         Rooms
       </Title>
-      <ul className="flex flex-row justify-center items-center flex-wrap md:overflow-auto m-auto w-5/6 h-64 md:h-80 lg:overflow-hidden">
+      <List className="flex flex-row justify-center items-center flex-wrap md:overflow-auto m-auto w-5/6 h-64 md:h-80 lg:overflow-hidden">
         {rooms ? (
           rooms.map(({ roomName, roomDescription, id }) => {
             return (
@@ -51,9 +57,9 @@ export const RoomList: FC<RoomListProps> = ({ handleRoom, state }) => {
             );
           })
         ) : (
-          <MessagePlaceholder className="justify-between items-center rounded-2xl" />
+          <MsgContainerPlaceholder className="justify-between items-center rounded-2xl" />
         )}
-      </ul>
+      </List>
       <AddRoom />
     </div>
   );

@@ -26,8 +26,8 @@ function* loadRooms(action){
 }
 
 function* startAddRoom(){
-    yield takeLatest('START_ADD_ROOM', addRoom )
-    yield takeLatest("START_LOAD_ROOMS", loadRooms )
+    yield takeLatest(types.START_ADD_ROOM, addRoom )
+    yield takeLatest(types.START_LOAD_ROOMS, loadRooms )
 }
 
 export default startAddRoom

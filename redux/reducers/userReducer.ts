@@ -22,7 +22,6 @@ export const authReducer = (state = initialState, action:Action) => {
       };
       
       case types.LOGIN_FAILED:
-        console.log('object')
         return {
           ...state,
           authError: action.payload,

@@ -4,12 +4,13 @@ import { Avatar } from "../molecules/Avatar";
 import { FC, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/reducers/rootReducer";
-import { AddBtn } from "../atoms/AddBtn";
+import { Btn } from "../atoms/Btn";
 import { firebase } from "../../firebase/firebaseConfig";
 import { types } from "../../redux/types";
+import { Span } from "../atoms/Span";
 
 export const Sidebar: FC = () => {
-  const [state, setstate] = useState(false);
+  const [state, setstate] = useState<boolean>(false);
   const { activeRoom } = useSelector((state: RootState) => state.rooms);
   const dispatch = useDispatch();
 
@@ -36,19 +37,19 @@ export const Sidebar: FC = () => {
     >
       <Title className="text-xl md:text-3xl font-bold">Next Chat</Title>
       <section className="md:hidden flex flex-col">
-        <span className="text-2xl">{roomName}</span>
-        <button onClick={handleRoom}>Change Room</button>
+        <Span className="text-2xl">{roomName}</Span>
+        <Btn onClick={handleRoom}>Change Room</Btn>
       </section>
       <Avatar />
       <RoomList handleRoom={handleRoom} state={state} />
-      <AddBtn
+      <Btn
         onClick={handleLogout}
         className={`bg-red-400 rounded-lg h-10 w-1/6 md:h-10 md:w-3/6 md:block ${
           !state && "hidden"
         }`}
       >
         Log out
-      </AddBtn>
+      </Btn>
     </aside>
   );
 };

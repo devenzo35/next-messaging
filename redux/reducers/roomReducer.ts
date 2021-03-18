@@ -12,7 +12,6 @@ const initialState = {
 export const roomReducer = (state = initialState, action:Action) => {
   switch (action.type) {
     case types.ADD_ROOM:
-      console.log(action.payload)
       return {
         ...state,
         rooms:[...state.rooms, ...[action.payload]]}

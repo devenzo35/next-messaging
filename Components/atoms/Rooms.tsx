@@ -4,7 +4,7 @@ interface RoomsProps {
   roomName: string;
   roomDescription: string;
   id: string;
-  setActiveRoom: (T: Object) => void;
+  setActiveRoom(T: Object): void;
 }
 
 export const Rooms: FC<RoomsProps> = ({

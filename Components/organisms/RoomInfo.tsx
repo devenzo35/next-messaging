@@ -4,10 +4,15 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/reducers/rootReducer";
 import { P } from "../atoms/P";
 
+interface ActiveRoom {
+  roomName: string;
+  roomDescription: string;
+}
+
 export const RoomInfo: FC = () => {
   const { activeRoom } = useSelector((state: RootState) => state.rooms);
 
-  const { roomName, roomDescription } = activeRoom;
+  const { roomName, roomDescription }: ActiveRoom = activeRoom;
 
   return (
     <div className="room__info h-3/6 w-1/5 text-center shadow-md hidden md:flex flex-col justify-center items-center self-start bg-white border-2 px-1 border-indigo-700">

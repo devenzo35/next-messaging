@@ -1,14 +1,17 @@
 import { FC, FormEvent, useEffect, useState } from "react";
-import { firebase, db, storage } from "../../firebase/firebaseConfig";
-import { Input } from "../atoms/Input";
-import { MsgBtn } from "../atoms/MsgBtn";
+
+import { firebase } from "../../firebase/firebaseConfig";
 import { useDispatch, useSelector } from "react-redux";
-import { types } from "../../redux/types";
-import { useForm } from "../../hooks/useForm";
-import { Picker } from "emoji-mart";
-import { RootState } from "../../redux/reducers/rootReducer";
+
 import { useUploadFile } from "../../hooks/useUploadFile";
-import { v4 as uuidv4 } from "uuid";
+import { RootState } from "../../redux/reducers/rootReducer";
+import { BaseEmoji, Picker } from "emoji-mart";
+import { useForm } from "../../hooks/useForm";
+import { types } from "../../redux/types";
+import { MsgBtn } from "../atoms/MsgBtn";
+import { Input } from "../atoms/Input";
+import { Form } from "../atoms/Form";
+import { Img } from "../atoms/Img";
 
 interface User {
   username: string;
@@ -30,14 +33,14 @@ interface Payload {
 }
 
 export const InputMessage: FC = () => {
-  const dispatch = useDispatch();
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [progress, setProgress] = useState<string>(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+  const [task, setTask] = useState<firebase.storage.UploadTask>(null);
   const { user } = useSelector((state: RootState) => state.auth);
   const { activeRoom } = useSelector((state: RootState) => state.rooms);
-  const [task, setTask] = useState(null);
-  const [imageUrl, setImageUrl] = useState<string>("");
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const { id } = activeRoom || "";
-  const [progress, setProgress] = useState<string>(null);
+  const dispatch = useDispatch();
   const { formValue, handleOnChange, reset } = useForm<Message>({
     message: "",
   });
@@ -50,12 +53,14 @@ export const InputMessage: FC = () => {
       task.on(
         "state_changed",
         (snapshot) => {
+          console.log(snapshot);
           var progressPorcentage =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setProgress(progressPorcentage.toFixed(1) + "%");
         },
-        (err) => {
-          setProgress("Image couldn't be uploaded" + err.message);
+        (err: Error) => {
+          console.log(err);
+          setProgress("Image couldn't be uploaded");
         },
         () => {
           task.snapshot.ref.getDownloadURL().then((url: string) => {
@@ -96,7 +101,7 @@ export const InputMessage: FC = () => {
     setImageUrl(null);
   };
 
-  const handleSelect = (emoji) => {
+  const handleSelect = (emoji: BaseEmoji) => {
     handleOnChange({
       target: {
         name: "message",
@@ -116,7 +121,7 @@ export const InputMessage: FC = () => {
   };
 
   return (
-    <form
+    <Form
       onSubmit={handleSubmit}
       className="input__msg shadow-lg bg-white flex flex-row w-full md:mt-1"
     >
@@ -153,7 +158,7 @@ export const InputMessage: FC = () => {
         onClick={() => setShowEmojiPicker(false)}
       />
       {imageUrl && (
-        <img src={imageUrl} className="rounded-lg p-1" alt="image preview" />
+        <Img src={imageUrl} className="rounded-lg p-1" alt="image preview" />
       )}
       <MsgBtn
         type={"submit"}
@@ -162,6 +167,6 @@ export const InputMessage: FC = () => {
       >
         SEND
       </MsgBtn>
-    </form>
+    </Form>
   );
 };

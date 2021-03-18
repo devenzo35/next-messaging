@@ -6,5 +6,9 @@ interface PProps {
 }
 
 export const P: FC<PProps> = (props) => {
-  return <p className={props.className}>{props.children}</p>;
+  return (
+    <p className={props.className} {...props}>
+      {props.children}
+    </p>
+  );
 };

@@ -9,9 +9,9 @@ interface MsgBtn {
 export const MsgBtn: FC<MsgBtn> = (props): JSX.Element => {
   return (
     <button
-      {...props}
       type={props.type}
-      className={`w-1/6 duration-500 border-2 hover:border-gray-200 border-white hover:shadow-md focus:outline-none focus:*`}
+      {...props}
+      className={`w-1/6 duration-500 border-2 hover:border-gray-200 border-white hover:shadow-md focus:outline-none focus:* ${props.className}`}
     >
       {props.children}
     </button>

@@ -1,7 +1,7 @@
 import React, { FC, FormEvent } from "react";
 
 interface FormProps {
-  className: string;
+  className?: string;
   onSubmit(e: FormEvent): void;
 }
 

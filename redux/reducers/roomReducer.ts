@@ -14,18 +14,20 @@ export const roomReducer = (state = initialState, action:Action) => {
     case types.ADD_ROOM:
       return {
         ...state,
-        rooms:[...state.rooms, ...[action.payload]]}
+        rooms:[...state.rooms, ...[action.payload]]
+      }
     
       case types.LOAD_ROOM:
       return {
         ...state,
-        rooms:[...action.payload]}
+        rooms:[...action.payload]
+      }
 
     case types.ACTIVE_ROOM:
       return {
         ...state,
         activeRoom: action.payload
-            }
+      }
     default:
       return state;
   }

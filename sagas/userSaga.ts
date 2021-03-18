@@ -39,7 +39,6 @@ function* registerWithEmailAndPassword(action) {
         yield put ({ type: types.LOGIN_USER, payload: userInfo });
         action.payload.reset();
       }catch(err){
-        console.log(err)
         yield put({ type: types.LOGIN_FAILED, payload: err.message });
       };
       
@@ -57,7 +56,6 @@ function* registerWithEmailAndPassword(action) {
         yield put ({ type: types.LOGIN_USER, payload: userInfo });
         action.payload.reset();
       }catch(err){
-        console.log(err)
         yield put({ type: types.LOGIN_FAILED, payload: err.message });
       };
     

@@ -64,7 +64,6 @@ export const InputMessage: FC = () => {
         },
         () => {
           task.snapshot.ref.getDownloadURL().then((url: string) => {
-            setProgress("Image uploaded");
             setImageUrl(url);
           });
         }
@@ -112,8 +111,11 @@ export const InputMessage: FC = () => {
 
   const handleFile = async (e: Event) => {
     const file = (e.target as HTMLInputElement).files[0];
-    const uploadTask = useUploadFile(file);
-    setTask(uploadTask);
+
+    if (file) {
+      const uploadTask = useUploadFile(file);
+      setTask(uploadTask);
+    }
   };
 
   const handleEmojiTable = () => {
@@ -127,7 +129,7 @@ export const InputMessage: FC = () => {
     >
       <MsgBtn
         type="button"
-        className="flex flex-col p-2 items-center justify-center"
+        className="grid place-items-center p-2"
         onClick={StartUploadFile}
       >
         <i className="fas fa-paperclip"></i>
@@ -143,7 +145,7 @@ export const InputMessage: FC = () => {
       </section>
       <MsgBtn
         type="button"
-        className="w-10 h-full grid place-items-center"
+        className="h-full grid place-items-center"
         onClick={handleEmojiTable}
       >
         <i className="far fa-smile"></i>

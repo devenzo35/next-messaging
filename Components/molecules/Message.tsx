@@ -34,23 +34,11 @@ export const Message: React.FC<MessageProps> = (props) => {
         uid === userId ? "justify-end" : "justify-start"
       }  mb-2`}
     >
-      {showImage && (
-        <section
-          onClick={hanldeViewImage}
-          className="bg-black md:bg-opacity-80 absolute h-screen w-full top-0 bottom-0 left-0 right-0 flex justify-center items-center"
-        >
-          <Img
-            src={image}
-            alt="message image"
-            className="w-full h-3/6  md:w-4/6 md:h-5/6 md:rounded-md mb-1 cursor-pointer"
-          ></Img>
-        </section>
-      )}
       {uid !== userId && src && (
         <Img className="w-8 h-8 rounded-3xl" src={src} alt="message"></Img>
       )}
       <section
-        className={`shadow-md ml-1 rounded-xl mt-4 p-1 w-max max-w-2xl ${
+        className={`shadow-md ml-1 rounded-xl mt-4 p-1 w-max max-w-md ${
           uid === userId ? "bg-indigo-400" : "bg-indigo-600"
         }`}
       >
@@ -63,8 +51,21 @@ export const Message: React.FC<MessageProps> = (props) => {
             onClick={hanldeViewImage}
             src={image}
             alt="message image"
-            className="h-44 w-64 md:h-60 md:w-80 rounded-md mb-1 cursor-pointer"
+            className="h-44 w-full md:h-60 md:m-auto rounded-md mb-2 cursor-pointer"
           ></Img>
+        )}
+
+        {showImage && (
+          <section
+            onClick={hanldeViewImage}
+            className="bg-black md:bg-opacity-80 absolute h-screen w-full top-0 bottom-0 left-0 right-0 flex justify-center items-center"
+          >
+            <Img
+              src={image}
+              alt="message image"
+              className="w-full h-3/6  md:w-4/6 md:h-5/6 md:rounded-md mb-1 cursor-pointer"
+            ></Img>
+          </section>
         )}
 
         <P className="break-words shadow-inner p-0.5 px-1 rounded-md bg-white">

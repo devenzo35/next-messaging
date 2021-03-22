@@ -31,6 +31,12 @@ interface Payload {
   createdAt: firebase.firestore.Timestamp;
   image?: string;
 }
+/* 
+cloudinary.config({
+  cloud_name: "sample",
+  api_key: "874837483274837",
+  api_secret: "a676b67565c6767a6767d6767f676fe1",
+}); */
 
 export const InputMessage: FC = () => {
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -112,10 +118,42 @@ export const InputMessage: FC = () => {
   const handleFile = async (e: Event) => {
     const file = (e.target as HTMLInputElement).files[0];
 
-    if (file) {
+    const CLOUDINARY_URL =
+      "https://api.cloudinary.com/v1_1/dyukcbbpg/image/upload";
+
+    const CLOUDINARY_UPLOAD_PRESET = "next-messaging";
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+    setProgress("Loading image...");
+
+    fetch(CLOUDINARY_URL, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.secure_url !== "") {
+          setProgress("");
+          const uploadedFileUrl = data.secure_url;
+          setImageUrl(uploadedFileUrl);
+        }
+      })
+      .catch((err) => setProgress(err.message));
+
+    /* const hola = await cloudinary.v2.uploader.upload(
+      file.name,
+      function (error, result) {
+        console.log(result, error);
+      }
+    ); */
+
+    /* if (file) {
       const uploadTask = useUploadFile(file);
       setTask(uploadTask);
-    }
+    } */
   };
 
   const handleEmojiTable = () => {

@@ -3,7 +3,7 @@ import { FC, FormEvent, useEffect, useState } from "react";
 import { firebase } from "../../firebase/firebaseConfig";
 import { useDispatch, useSelector } from "react-redux";
 
-import { useUploadFile } from "../../hooks/useUploadFile";
+import { useUpload } from "../../hooks/useUpload";
 import { RootState } from "../../redux/reducers/rootReducer";
 import { BaseEmoji, Picker } from "emoji-mart";
 import { useForm } from "../../hooks/useForm";
@@ -39,7 +39,7 @@ cloudinary.config({
 }); */
 
 export const InputMessage: FC = () => {
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<any>("");
   const [progress, setProgress] = useState<string>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [task, setTask] = useState<firebase.storage.UploadTask>(null);
@@ -118,32 +118,17 @@ export const InputMessage: FC = () => {
   const handleFile = async (e: Event) => {
     const file = (e.target as HTMLInputElement).files[0];
 
-    const CLOUDINARY_URL =
-    "https://api.cloudinary.com/v1_1/dyukcbbpg/image/upload";
+    const CLOUDINARY_UPLOAD_PRESET = "next-messaging";
 
-  const CLOUDINARY_UPLOAD_PRESET = "next-messaging";
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    setProgress("Loading...");
+    const { url, error } = await useUpload(formData);
 
-  //setProgress("Loading image...");
-
-  fetch(CLOUDINARY_URL, {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.secure_url !== "") {
-        setProgress("");
-        const uploadedFileUrl = data.secure_url;
-        setImageUrl(uploadedFileUrl)
-        
-      }
-    })
-    .catch((err) =>{setProgress(err.message));
-
+    error ? setProgress(error) : setProgress("");
+    setImageUrl(url);
   };
 
   const handleEmojiTable = () => {

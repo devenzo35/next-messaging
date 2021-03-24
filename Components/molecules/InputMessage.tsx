@@ -119,41 +119,31 @@ export const InputMessage: FC = () => {
     const file = (e.target as HTMLInputElement).files[0];
 
     const CLOUDINARY_URL =
-      "https://api.cloudinary.com/v1_1/dyukcbbpg/image/upload";
+    "https://api.cloudinary.com/v1_1/dyukcbbpg/image/upload";
 
-    const CLOUDINARY_UPLOAD_PRESET = "next-messaging";
+  const CLOUDINARY_UPLOAD_PRESET = "next-messaging";
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
-    setProgress("Loading image...");
+  //setProgress("Loading image...");
 
-    fetch(CLOUDINARY_URL, {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.secure_url !== "") {
-          setProgress("");
-          const uploadedFileUrl = data.secure_url;
-          setImageUrl(uploadedFileUrl);
-        }
-      })
-      .catch((err) => setProgress(err.message));
-
-    /* const hola = await cloudinary.v2.uploader.upload(
-      file.name,
-      function (error, result) {
-        console.log(result, error);
+  fetch(CLOUDINARY_URL, {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.secure_url !== "") {
+        setProgress("");
+        const uploadedFileUrl = data.secure_url;
+        setImageUrl(uploadedFileUrl)
+        
       }
-    ); */
+    })
+    .catch((err) =>{setProgress(err.message));
 
-    /* if (file) {
-      const uploadTask = useUploadFile(file);
-      setTask(uploadTask);
-    } */
   };
 
   const handleEmojiTable = () => {

@@ -36,7 +36,7 @@ export const RoomList: FC<RoomListProps> = ({ handleRoom, state }) => {
 
   return (
     <div
-      className={`block  bg-indigo-400 rounded-xl inner-shadow flex-col w-5/6 text-xl text-center overflow-auto md:flex ${
+      className={`block  bg-indigo-400 rounded-xl inner-shadow flex-col w-5/6 text-xl text-center overflow-auto md:flex shadow-md ${
         !state && "hidden"
       }`}
     >

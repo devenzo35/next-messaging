@@ -31,20 +31,23 @@ export const Sidebar: FC = () => {
   };
   return (
     <aside
-      className={`sidebar w-full h-20 md:w-2/5 md:h-screen bg-indigo-600 text-white text-xs md:text-lg py-6 px-3 flex md:flex-col justify-between items-center duration-1000 ${
-        state && "h-full absolute flex-col jusitfy-evenly md:static"
+      className={`sidebar w-full h-20 md:w-2/5 md:h-screen bg-indigo-600 text-white text-xs md:text-lg py-6 px-3 flex md:flex-col justify-between items-center duration-500 ${
+        state &&
+        "h-full absolute flex-col duration-500 jusitfy-evenly md:static"
       }`}
     >
       <Title className="text-xl md:text-3xl font-bold">Next Chat</Title>
       <section className="md:hidden flex flex-col">
         <Span className="text-2xl">{roomName}</Span>
-        <Btn onClick={handleRoom}>Change Room</Btn>
+        <Btn className="rounded-xl bg-indigo-500" onClick={handleRoom}>
+          Change Room
+        </Btn>
       </section>
       <Avatar />
       <RoomList handleRoom={handleRoom} state={state} />
       <Btn
         onClick={handleLogout}
-        className={`bg-red-400 rounded-lg h-10 w-1/6 md:h-10 md:w-3/6 md:block ${
+        className={`bg-red-400 rounded-lg h-10 w-1/5 md:h-10 md:w-3/6 md:block shadow-md ${
           !state && "hidden"
         }`}
       >

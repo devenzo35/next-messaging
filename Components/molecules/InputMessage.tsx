@@ -173,7 +173,11 @@ export const InputMessage: FC = () => {
         onClick={() => setShowEmojiPicker(false)}
       />
       {imageUrl && (
-        <Img src={imageUrl} className="rounded-lg p-1" alt="image preview" />
+        <Img
+          src={imageUrl}
+          className="rounded-lg p-1 w-16 md:w-24"
+          alt="image preview"
+        />
       )}
       <MsgBtn
         type={"submit"}
